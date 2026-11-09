@@ -8,10 +8,12 @@ import {
   Inject,
   Param,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ParceirosService } from './parceiros.service';
 import { CreateParceiroDto } from './dto/create-parceiro.dto';
+import { QueryParceirosDto } from './dto/query-parceiros.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RhGuard } from '../auth/rh.guard';
 
@@ -29,8 +31,8 @@ export class ParceirosController {
 
   @Get()
   @UseGuards(JwtAuthGuard, RhGuard)
-  async findAll() {
-    return this.parceirosService.findAll();
+  async findAll(@Query() query: QueryParceirosDto) {
+    return this.parceirosService.findAll(query);
   }
 
   @Get(':id')
