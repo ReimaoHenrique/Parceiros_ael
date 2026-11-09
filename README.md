@@ -18,6 +18,14 @@ npx prisma generate
 pnpm build
 ```
 
+Variaveis de ambiente:
+
+```env
+DATABASE_URL="postgres://...@db.prisma.io:5432/postgres?sslmode=require"
+JWT_SECRET="mesmo segredo do nestjs_auth_ael"
+PORT=3000
+```
+
 ## 3) Banco e migrations
 
 Antes de testar `POST /parceiros`, aplique migrations:
@@ -42,8 +50,10 @@ Rotas:
 
 - `GET /health`
 - `GET /version`
-- `POST /parceiros`
-- `GET /parceiros/:id`
+- `POST /parceiros` (aberto)
+- `GET /parceiros` (JWT + tag `rh`)
+- `GET /parceiros/:id` (aberto)
+- `DELETE /parceiros/:id` (JWT + tag `rh`)
 
 ## 5) Rodar local simulando Vercel
 
@@ -67,7 +77,29 @@ O projeto usa handler serverless em `api/index.ts` com rewrite global no `vercel
 }
 ```
 
-## 7) Erros comuns
+## 7) Autenticacao (GET /parceiros e DELETE /parceiros/:id)
+
+O token **nao e gerado aqui**. Quem emite e a API de autenticacao
+(`nestjs_auth_ael`), via `POST /auth/login`. Esta API apenas valida o
+access token com o mesmo `JWT_SECRET` e exige a tag `rh`.
+
+```bash
+curl -X POST https://nestjs-auth-ael.vercel.app/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"usuario@ael.com","password":"senha"}'
+```
+
+```bash
+curl https://parceiros-ael.vercel.app/parceiros \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
+
+Respostas:
+
+- `401 No token provided` / `401 Invalid token` - token ausente, malformado ou assinatura invalida
+- `403 Apenas usuarios com a tag rh podem acessar esta rota` - token valido sem a tag `rh`
+
+## 8) Erros comuns
 
 ### `Command pnpmm not found`
 

@@ -5,8 +5,10 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "packageManager": "pnpm@11.4.0",
   "scripts": {
-    "build": "nest build",
+    "build": "prisma generate && nest build",
+    "vercel-build": "prisma generate && nest build",
     "dev": "nest start --watch",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -28,6 +30,7 @@
     "@prisma/extension-accelerate": "^1.3.0",
     "dotenv": "^17.3.1",
     "fastify": "^5.7.4",
+    "jsonwebtoken": "^9.0.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
   },
@@ -38,6 +41,7 @@
     "@nestjs/schematics": "^7.3.1",
     "@nestjs/testing": "^11.0.1",
     "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
     "eslint": "^10.0.1",
